@@ -1,0 +1,68 @@
+REATE DATABASE Wilders
+
+USE Wilders;
+
+CREATE TABLE Wilderslist (
+	id INT PRIMARY KEY IDENTITY (1,1),
+	first_name VARCHAR(50),
+	last_name VARCHAR(50),
+	age INT NOT NULL,
+	isMale BIT DEFAULT 0,
+	descriptions TEXT,
+	HasDiploma BIT DEFAULT 0,
+);
+
+
+
+INSERT INTO Wilderslist (first_name, last_name, age, isMale, descriptions, HasDiploma)
+VALUES
+('Elif', 'Inanc', 30, 0, 'An aspiring wilder', 1),
+('Egdfg', 'Isdf', 34, 1, 'sdf sdf', 0),
+('Esdf', 'Ijh', 12, 0, 'df', 1),
+('dfd', 'khg', 82, 1, 'goukok', 1),
+('plkuj', 'tyty', 21, 0, 'ryht', 0);
+
+SELECT * FROM Wilderslist
+WHERE isMale = 1;
+
+
+SELECT * FROM Wilderslist
+WHERE isMale = 0 AND age>25;
+
+SELECT * FROM Wilderslist
+WHERE age<25;
+
+BEGIN TRANSACTION
+UPDATE Wilderslist
+SET HasDiploma=1;
+COMMIT;
+
+SELECT COUNT (*) FROM Wilderslist
+WHERE HasDiploma=1;
+
+
+BEGIN TRANSACTION
+DELETE FROM Wilderslist;
+COMMIT;
+
+SELECT * FROM Wilderslist;
+
+ALTER TABLE Wilderslist
+ADD diplomasDate DATETIME;
+
+SELECT * FROM Wilderslist;
+
+UPDATE Wilderslist 
+SET diplomasDate = GETDATE();
+
+USE Wilders;
+Select CONVERT(VARCHAR, diplomasDate, 106) from Wilderslist;
+Select CONVERT(VARCHAR, diplomasDate, 107) from Wilderslist;
+--SELECT CONVERT(DATETIME, diplomasDate, 1);
+
+SELECT DATEADD(DD,2,diplomasDate)from Wilderslist;
+
+UPDATE Wilderslist 
+SET diplomasDate = DATEADD(DD,2,diplomasDate);
+
+SELECT * FROM Wilderslist;
