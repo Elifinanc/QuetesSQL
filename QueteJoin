@@ -1,0 +1,36 @@
+CREATE TABLE [Martians](
+	[idMartians] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[idEarthling] [int] NOT NULL,
+	[idSuperiorMartians] [int] NOT NULL,
+	[name] [varchar](50) NULL,
+	[base] [varchar](50) NOT NULL
+  )
+GO
+
+CREATE TABLE [Earthling](
+	[idEarthling] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[name] [varchar](50) NOT NULL,
+	[continent] [varchar](50) NOT NULL
+  )
+GO
+
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (1, 2, 'blublu', 'burg')
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (2 , 3, 'blibli', 'tirg')
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (3 , 4, 'bloblo', 'forg')
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (4 , 5, 'blabla', 'parg')
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (5 , 5, 'emperor', 'kingsland')
+
+INSERT INTO [Earthling] ([name], continent) VALUES ('Ulysse', 'Europe')
+INSERT INTO [Earthling] ([name], continent) VALUES ('Irene', 'Amerique')
+INSERT INTO [Earthling] ([name], continent) VALUES ('Aurelia', 'Asie')
+INSERT INTO [Earthling] ([name], continent) VALUES ('Etienne', 'Europe')
+INSERT INTO [Earthling] ([name], continent) VALUES ('Antoine', 'Afrique')
+
+GO
+
+SELECT m.[name], e.[name], e.[continent], m.[base]
+FROM Martians AS m
+INNER JOIN Earthling AS e
+ON m.idEarthling=e.idEarthling;
+
+GO
