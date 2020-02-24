@@ -1,36 +1,73 @@
-CREATE TABLE [Martians](
-	[idMartians] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	[idEarthling] [int] NOT NULL,
-	[idSuperiorMartians] [int] NOT NULL,
-	[name] [varchar](50) NULL,
-	[base] [varchar](50) NOT NULL
+CREATE TABLE [Continent] (
+	[idContinent] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[name] [varchar](50) NOT NULL
+  )
+GO
+
+CREATE TABLE [Base] (
+	[idBase] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[name] [varchar](50) NOT NULL
   )
 GO
 
 CREATE TABLE [Earthling](
 	[idEarthling] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
-	[continent] [varchar](50) NOT NULL
+	[idContinent] [int]  FOREIGN KEY REFERENCES [Continent](idContinent)
   )
 GO
 
-INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (1, 2, 'blublu', 'burg')
-INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (2 , 3, 'blibli', 'tirg')
-INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (3 , 4, 'bloblo', 'forg')
-INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (4 , 5, 'blabla', 'parg')
-INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], base) VALUES (5 , 5, 'emperor', 'kingsland')
+CREATE TABLE [SuperiorMartians](
+	[idSuperiorMartians] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[name] [varchar](50) NOT NULL
+	)
+GO
 
-INSERT INTO [Earthling] ([name], continent) VALUES ('Ulysse', 'Europe')
-INSERT INTO [Earthling] ([name], continent) VALUES ('Irene', 'Amerique')
-INSERT INTO [Earthling] ([name], continent) VALUES ('Aurelia', 'Asie')
-INSERT INTO [Earthling] ([name], continent) VALUES ('Etienne', 'Europe')
-INSERT INTO [Earthling] ([name], continent) VALUES ('Antoine', 'Afrique')
+CREATE TABLE [Martians](
+	[idMartians] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[idEarthling] [int] FOREIGN KEY REFERENCES [Earthling] (idEarthling),
+	[idSuperiorMartians] [int] FOREIGN KEY REFERENCES [SuperiorMartians] (idSuperiorMartians),
+	[name] [varchar](50) NOT NULL,
+	[idBase] [int] FOREIGN KEY REFERENCES [Base] (idBase)
+  )
+GO
+
+INSERT INTO [Continent] ("name") VALUES ('Europe')
+INSERT INTO [Continent] ("name") VALUES ('Amerique')
+INSERT INTO [Continent] ("name") VALUES ('Asie')
+INSERT INTO [Continent] ("name") VALUES ('Afrique')
+
+INSERT INTO [Base] ("name") VALUES ('burg')
+INSERT INTO [Base] ("name") VALUES ('tirg')
+INSERT INTO [Base] ("name") VALUES ('forg')
+INSERT INTO [Base] ("name") VALUES ('parg')
+INSERT INTO [Base] ("name") VALUES ('kingsland')
+
+INSERT INTO [Earthling] ([name], idContinent) VALUES ('Ulysse', 1)
+INSERT INTO [Earthling] ([name], idContinent) VALUES ('Irene', 2)
+INSERT INTO [Earthling] ([name], idContinent) VALUES ('Aurelia', 3)
+INSERT INTO [Earthling] ([name], idContinent) VALUES ('Etienne', 1)
+INSERT INTO [Earthling] ([name], idContinent) VALUES ('Antoine', 4)
+
+INSERT INTO [SuperiorMartians] ([name]) VALUES ('tutu')
+INSERT INTO [SuperiorMartians] ([name]) VALUES ('titi')
+INSERT INTO [SuperiorMartians] ([name]) VALUES ('toto')
+INSERT INTO [SuperiorMartians] ([name]) VALUES ('tata')
+INSERT INTO [SuperiorMartians] ([name]) VALUES ('emperor')
+
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], idBase) VALUES (1, 2, 'blublu', 1)
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], idBase) VALUES (2 , 3, 'blibli', 2)
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], idBase) VALUES (3 , 4, 'bloblo', 3)
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], idBase) VALUES (4 , 5, 'blabla', 4)
+INSERT INTO [Martians] (idEarthling, idSuperiorMartians, [name], idBase) VALUES (5 , 5, 'emperor', 5)
 
 GO
 
-SELECT m.[name], e.[name], e.[continent], m.[base]
+SELECT m.[name] , e.[name], c.[name], b.[name]
 FROM Martians AS m
-INNER JOIN Earthling AS e
-ON m.idEarthling=e.idEarthling;
+INNER JOIN Earthling AS e ON m.idEarthling=e.idEarthling
+INNER JOIN Continent AS c ON e.idContinent = c.idContinent
+INNER JOIN Base AS b ON b.idBase = m.idBase
+
 
 GO
