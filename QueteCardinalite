@@ -1,0 +1,89 @@
+CREATE DATABASE CARDINALITE
+
+CREATE TABLE [Category] (
+	[CategoryID] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[name] [varchar](50) NOT NULL
+  )
+GO
+
+CREATE TABLE [Product] (
+	[ProductID] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[name] [varchar](50) NOT NULL,
+	[price] [int] NOT NULL,
+	[FK_CategoryID] [int] FOREIGN KEY REFERENCES [Category] (CategoryID)
+  )
+GO
+
+CREATE TABLE [Purchases] (
+	[PurchasesID] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	[FK_ProductID] [int] FOREIGN KEY REFERENCES [Product](ProductID),
+	[purchaseDate] [DATETIME] NOT NULL
+  )
+GO
+
+CREATE TABLE [ProductStock] (
+	[ProductStockID] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
+	product_id [int], 
+	CONSTRAINT [FK_ProductID] FOREIGN KEY (product_id) REFERENCES [Product](ProductID),
+  )
+GO
+
+INSERT INTO [Category] ([name]) VALUES ('Pants'),
+									   ('T-shirts'),
+									   ('Sunglass')
+
+INSERT INTO [Product] ([name], price, FK_CategoryID) VALUES ('Mom jeans', 39, 1),
+														    ('Blue jeans', 59, 1),
+															('Destroyed jeans', 99, 1),
+															('Pink t-shirt', 29, 2),
+															('White t-shirt', 19, 2),
+														    ('Gray t-shirt', 39, 2),
+														    ('Rayban Sunglass', 399, 3),
+															('Gucci Sunglass', 999, 3),
+														    ('YvesSaintLaurent Sunglass', 699, 3)
+
+INSERT INTO [Purchases] (FK_ProductID, purchaseDate) VALUES (1, '20180222'),
+															(4, '20200115'),
+														    (9, '20190102'),
+															(8, '20170630'),
+															(5, '20191222'),
+															(2, '20200206'),
+															(3, '20181018'),
+															(6, '20190914'),
+															(2, '20180704'),
+															(7, '20200108'),
+															(5, '20200222'),
+															(3, '20171228'),
+															(2, '20190513'),
+															(6, '20180429'),
+															(8, '20190812'),
+															(9, '20200208'),
+															(5, '20170408'),
+															(1, '20190109')
+GO
+
+INSERT INTO [ProductStock] (product_id) VALUES (1),
+												 (1),
+												 (1),
+												 (2),
+												 (2),
+												 (3),
+												 (4),
+												 (4),
+												 (4),
+												 (5),
+												 (7),
+												 (7),
+												 (7),
+												 (7),
+												 (8),
+												 (9),
+												 (9)
+GO
+
+SELECT c.[name] AS CategoryName, COUNT(p.ProductID) AS ProductInStock
+FROM Product AS p
+INNER JOIN Category AS c ON c.CategoryID = p.FK_CategoryID
+INNER JOIN ProductStock AS ps ON ps.product_id = p.ProductID
+GROUP BY c.[name]
+GO
