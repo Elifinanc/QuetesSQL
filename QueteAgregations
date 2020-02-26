@@ -8,13 +8,12 @@ CREATE TABLE [Product] (
 	[idProduct] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
 	[name] [varchar](50) NOT NULL,
 	[price] [int] NOT NULL,
-	[idCategory] [int] FOREIGN KEY REFERENCES [Category] (idCategory)
+	[FK_idCategory] [int] FOREIGN KEY REFERENCES [Category] (idCategory) NOT NULL
   )
 GO
 
 CREATE TABLE [Purchases] (
 	[idPurchases] [int] PRIMARY KEY IDENTITY(1,1) NOT NULL,
-	[idCategory] [int] FOREIGN KEY REFERENCES [Category](idCategory),
 	[idProduct] [int] FOREIGN KEY REFERENCES [Product](idProduct),
 	[purchaseDate] [DATETIME] NOT NULL
   )
@@ -24,15 +23,15 @@ INSERT INTO [Category] ([name]) VALUES ('Pants')
 INSERT INTO [Category] ([name]) VALUES ('T-shirts')
 INSERT INTO [Category] ([name]) VALUES ('Sunglass')
 
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Mom jeans', 39, 1)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Blue jeans', 59, 1)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Destroyed jeans', 99, 1)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Pink t-shirt', 29, 2)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('White t-shirt', 19, 2)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Gray t-shirt', 39, 2)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Rayban Sunglass', 399, 3)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('Gucci Sunglass', 999, 3)
-INSERT INTO [Product] ([name], price, idCategory) VALUES ('YvesSaintLaurent Sunglass', 699, 3)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Mom jeans', 39, 1)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Blue jeans', 59, 1)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Destroyed jeans', 99, 1)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Pink t-shirt', 29, 2)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('White t-shirt', 19, 2)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Gray t-shirt', 39, 2)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Rayban Sunglass', 399, 3)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('Gucci Sunglass', 999, 3)
+INSERT INTO [Product] ([name], price, FK_idCategory) VALUES ('YvesSaintLaurent Sunglass', 699, 3)
 
 INSERT INTO [Purchases] (idCategory, idProduct, purchaseDate) VALUES (1, 1, '20180222')
 INSERT INTO [Purchases] (idCategory, idProduct, purchaseDate) VALUES (2, 4, '20200115')
@@ -55,15 +54,13 @@ INSERT INTO [Purchases] (idCategory, idProduct, purchaseDate) VALUES (1, 1, '201
 
 GO
 
-SELECT c.[name] AS CategoryName, SUM(p.price) AS PurchaseProductsPriceSum
-FROM Category AS c
-JOIN Product AS p ON p.idCategory=c.idCategory
+SELECT c.[name] AS CategoryName, COUNT(u.idPurchases) AS PurchaseNumberSum, SUM(p.price) AS PurchaseProductsPriceSum
+FROM Product AS p
+INNER JOIN Category AS c ON p.FK_idCategory=c.idCategory
+INNER JOIN Purchases AS u ON u.idProduct=p.idProduct
 GROUP BY c.[name]
 
-SELECT c.[name] AS CategoryName, COUNT(u.idPurchases) AS PurchaseNumberSum
-FROM Category AS c
-JOIN Purchases AS u ON u.idCategory=c.idCategory
-GROUP BY c.[name]
+GO
 
 SELECT c.[name] AS CategoryName, COUNT(u.idPurchases) AS PurchaseBetween2019and2020
 FROM Category AS c
